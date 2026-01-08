@@ -1,0 +1,40 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>cbug.dev</h1>
+
+			<p>
+				Notes from blue-team work: incident response, SecOps, detection engineering,
+				and malware analysis — with extra attention on macOS.
+			</p>
+
+			<p>
+				I’m writing this down for two reasons, to keep myself honest about how I
+				reached a conclusion, and to make it easier to revisit a technique later
+				without re-learning everything from scratch.
+			</p>
+
+			<p>
+				Posts range from quick “here’s what I saw and what i thought about it” write-ups
+				to longer deep notes. Expect practical details (commands, artifacts, log ideas).
+			</p>
+
+			<p>
+				Start with the <a href="/blog">blog</a>, or check the <a href="/about">about</a> page for context.
+			</p>
+		</main>
+		<Footer />
+	</body>
+</html>

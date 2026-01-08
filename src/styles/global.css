@@ -1,0 +1,243 @@
+/*
+  Based on Bear Blog's default CSS (MIT).
+  https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
+*/
+
+:root {
+	/* Theme */
+	--background: #0b1210;
+	--surface: #0f1815;
+	--text-primary: #e6ece9;
+	--text-secondary: #a5b1aa;
+	--muted: #7f8c85;
+
+	/* Accent (dark green) */
+	--accent: #2f6f5f;
+	--accent-hover: #3a7a66;
+
+	/* Borders + shadows */
+	--border: rgba(255, 255, 255, 0.08);
+	--shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+
+	/* Code */
+	--code-bg: rgba(255, 255, 255, 0.06);
+	--code-border: rgba(255, 255, 255, 0.08);
+
+	/* Layout */
+	--content-width: 70ch;
+}
+
+/* Fonts */
+@font-face {
+	font-family: "Atkinson";
+	src: url("/fonts/atkinson-regular.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Atkinson";
+	src: url("/fonts/atkinson-bold.woff") format("woff");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	font-family: "Atkinson", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+
+	background: var(--background);
+	color: var(--text-primary);
+
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+
+	font-size: 19px;
+	line-height: 1.75;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Keep the starter's centered layout without reworking every page */
+main {
+	width: var(--content-width);
+	max-width: calc(100% - 2em);
+	margin: 0 auto;
+	padding: 4rem 1rem;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0 0 0.6rem 0;
+	color: var(--text-primary);
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+}
+
+h1 {
+	font-size: 2.6em;
+}
+h2 {
+	font-size: 2.0em;
+}
+h3 {
+	font-size: 1.6em;
+}
+h4 {
+	font-size: 1.25em;
+}
+h5 {
+	font-size: 1.1em;
+}
+h6 {
+	font-size: 1em;
+	color: var(--text-secondary);
+}
+
+/* Text */
+p {
+	margin: 0 0 1.1em 0;
+	color: var(--text-secondary);
+}
+
+.prose p {
+	margin-bottom: 1.6em;
+}
+
+strong,
+b {
+	font-weight: 700;
+	color: var(--text-primary);
+}
+
+/* Links */
+a {
+	color: var(--accent);
+	text-underline-offset: 0.2em;
+	text-decoration-thickness: 1px;
+}
+a:hover {
+	color: var(--accent-hover);
+}
+
+/* Lists */
+ul,
+ol {
+	color: var(--text-secondary);
+}
+li {
+	margin: 0.35em 0;
+}
+
+/* Media */
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 10px;
+}
+
+/* Tables */
+table {
+	width: 100%;
+	border-collapse: collapse;
+	color: var(--text-secondary);
+}
+th,
+td {
+	border-bottom: 1px solid var(--border);
+	padding: 0.6em 0.5em;
+	text-align: left;
+}
+
+/* Inline code */
+code {
+	padding: 0.15em 0.35em;
+	background-color: var(--code-bg);
+	border: 1px solid var(--code-border);
+	border-radius: 6px;
+	color: var(--text-primary);
+	font-size: 0.95em;
+}
+
+/* Code blocks */
+pre {
+	padding: 1.2em;
+	border-radius: 10px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	overflow-x: auto;
+	box-shadow: var(--shadow);
+}
+
+pre > code {
+	all: unset;
+}
+
+/* Quotes */
+blockquote {
+	border-left: 4px solid var(--accent);
+	padding: 0 0 0 1.1em;
+	margin: 1.2em 0;
+	color: var(--text-secondary);
+	font-size: 1.05em;
+}
+
+/* Rules */
+hr {
+	border: none;
+	border-top: 1px solid var(--border);
+	margin: 2em 0;
+}
+
+/* Forms */
+textarea,
+input {
+	width: 100%;
+	font-size: 16px;
+	background: var(--surface);
+	color: var(--text-primary);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	padding: 0.6em 0.75em;
+}
+
+/* Accessibility */
+.sr-only {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* Mobile tweaks */
+@media (max-width: 720px) {
+	body {
+		font-size: 18px;
+	}
+	main {
+		padding: 2rem 1rem;
+	}
+	h1 {
+		font-size: 2.2em;
+	}
+}
