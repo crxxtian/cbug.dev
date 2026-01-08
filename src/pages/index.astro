@@ -1,40 +1,124 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 5);
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.hero {
+				margin-bottom: 2.5rem;
+			}
+
+			.tagline {
+				margin-top: 0.4rem;
+				color: var(--text-secondary);
+				max-width: 40ch;
+			}
+
+			.list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.item {
+				display: flex;
+				justify-content: space-between;
+				gap: 1rem;
+				padding: 0.6rem 0;
+				border-bottom: 1px solid var(--border);
+			}
+
+			.item a {
+				color: var(--text-primary);
+				text-decoration: none;
+			}
+
+			.item a:hover {
+				color: var(--accent);
+			}
+
+			.date {
+				color: var(--muted);
+				white-space: nowrap;
+				font-size: 0.9rem;
+			}
+
+			.empty {
+				color: var(--text-secondary);
+				font-style: italic;
+			}
+
+			.more {
+				margin-top: 1rem;
+			}
+
+			.more a {
+				color: var(--accent);
+				text-decoration: none;
+			}
+
+			.more a:hover {
+				color: var(--accent-hover);
+			}
+
+			@media (max-width: 600px) {
+				.item {
+					flex-direction: column;
+					gap: 0.2rem;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
+
 		<main>
-			<h1>cbug.dev</h1>
+			<header class="hero">
+				<h1>cbug.dev</h1>
+				<p class="tagline">
+					A collection of writeups and learning posts from a security professional.
+				</p>
+			</header>
 
-			<p>
-				Notes from blue-team work: incident response, SecOps, detection engineering,
-				and malware analysis — with extra attention on macOS.
-			</p>
-
-			<p>
-				I’m writing this down for two reasons, to keep myself honest about how I
-				reached a conclusion, and to make it easier to revisit a technique later
-				without re-learning everything from scratch.
-			</p>
-
-			<p>
-				Posts range from quick “here’s what I saw and what i thought about it” write-ups
-				to longer deep notes. Expect practical details (commands, artifacts, log ideas).
-			</p>
-
-			<p>
-				Start with the <a href="/blog">blog</a>, or check the <a href="/about">about</a> page for context.
-			</p>
+			<section>
+				{
+					posts.length === 0 ? (
+						<p class="empty">No posts yet.</p>
+					) : (
+						<>
+							<ul class="list">
+								{posts.map((post) => (
+									<li class="item">
+										<a href={`/blog/${post.id}/`}>
+											{post.data.title}
+										</a>
+										<span class="date">
+											<FormattedDate date={post.data.pubDate} />
+										</span>
+									</li>
+								))}
+							</ul>
+							<p class="more">
+								<a href="/blog">All posts →</a>
+							</p>
+						</>
+					)
+				}
+			</section>
 		</main>
+
 		<Footer />
 	</body>
 </html>

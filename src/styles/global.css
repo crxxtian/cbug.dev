@@ -7,21 +7,23 @@
 	/* Theme */
 	--background: #0b1210;
 	--surface: #0f1815;
-	--text-primary: #e6ece9;
-	--text-secondary: #a5b1aa;
-	--muted: #7f8c85;
+
+	/* Readability */
+	--text-primary: #eef3f0;
+	--text-secondary: #c3cdc7;
+	--muted: #9aa6a0;
 
 	/* Accent (dark green) */
 	--accent: #2f6f5f;
 	--accent-hover: #3a7a66;
 
 	/* Borders + shadows */
-	--border: rgba(255, 255, 255, 0.08);
+	--border: rgba(255, 255, 255, 0.09);
 	--shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 
 	/* Code */
 	--code-bg: rgba(255, 255, 255, 0.06);
-	--code-border: rgba(255, 255, 255, 0.08);
+	--code-border: rgba(255, 255, 255, 0.09);
 
 	/* Layout */
 	--content-width: 70ch;
@@ -48,11 +50,19 @@ body {
 	height: 100%;
 }
 
+/* Sticky footer layout:
+   - body is a column
+   - main grows to fill remaining space
+*/
 body {
 	font-family: "Atkinson", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 	margin: 0;
 	padding: 0;
 	text-align: left;
+
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 
 	background: var(--background);
 	color: var(--text-primary);
@@ -68,6 +78,7 @@ body {
 
 /* Keep the starter's centered layout without reworking every page */
 main {
+	flex: 1;
 	width: var(--content-width);
 	max-width: calc(100% - 2em);
 	margin: 0 auto;
@@ -91,7 +102,7 @@ h1 {
 	font-size: 2.6em;
 }
 h2 {
-	font-size: 2.0em;
+	font-size: 2em;
 }
 h3 {
 	font-size: 1.6em;
@@ -104,7 +115,7 @@ h5 {
 }
 h6 {
 	font-size: 1em;
-	color: var(--text-secondary);
+	color: var(--muted);
 }
 
 /* Text */
