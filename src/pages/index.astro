@@ -11,7 +11,6 @@ const allPosts = (await getCollection('blog')).sort(
 );
 
 const featured = allPosts[0];
-const latest = allPosts.slice(1, 6);
 const hasTags = (post: any) => Array.isArray(post?.data?.tags) && post.data.tags.length > 0;
 ---
 
@@ -69,10 +68,100 @@ const hasTags = (post: any) => Array.isArray(post?.data?.tags) && post.data.tags
 			.navline {
 				margin-top: 0.9rem;
 				display: flex;
+				align-items: center;
 				flex-wrap: wrap;
 				gap: 0.9rem;
 				color: var(--muted);
 				font-size: 0.95rem;
+			}
+
+			.themeSwitch {
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+				margin-left: 0.2rem;
+			}
+
+			.themeToggle {
+				position: relative;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 1.8rem;
+				height: 1.6rem;
+				border-radius: 999px;
+				border: 1px solid transparent;
+				background: transparent;
+				color: inherit;
+				cursor: pointer;
+				padding: 0;
+				font-size: 0.95rem;
+				line-height: 1;
+				opacity: 0.75;
+				transition: color 140ms ease, border-color 140ms ease, background-color 140ms ease,
+					opacity 140ms ease;
+			}
+
+			.themeToggle:hover {
+				color: var(--text-primary);
+				border-color: var(--border);
+				background: var(--code-bg);
+				opacity: 1;
+			}
+
+			.themeToggle:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+			}
+
+			.themeToggle::after {
+				content: "";
+				position: absolute;
+				inset: -0.45rem;
+				border-radius: 999px;
+				border: 1px solid var(--accent);
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			.themeToggle.is-pulse::after {
+				animation: themePulse 420ms ease;
+			}
+
+			.themeToast {
+				position: absolute;
+				left: calc(100% + 0.45rem);
+				top: 50%;
+				transform: translateY(calc(-50% + 6px));
+				padding: 0.18rem 0.55rem;
+				border-radius: 999px;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				color: var(--text-primary);
+				font-size: 0.7rem;
+				font-family: var(--mono);
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				white-space: nowrap;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 160ms ease, transform 160ms ease;
+			}
+
+			.themeToast.is-visible {
+				opacity: 1;
+				transform: translateY(-50%);
+			}
+
+			@keyframes themePulse {
+				from {
+					opacity: 0.65;
+					transform: scale(0.85);
+				}
+				to {
+					opacity: 0;
+					transform: scale(1.35);
+				}
 			}
 
 			.divider {
@@ -193,6 +282,15 @@ const hasTags = (post: any) => Array.isArray(post?.data?.tags) && post.data.tags
 					gap: 0.25rem;
 				}
 
+				.themeToast {
+					left: 50%;
+					top: calc(100% + 0.35rem);
+					transform: translateX(-50%) translateY(6px);
+				}
+
+				.themeToast.is-visible {
+					transform: translateX(-50%) translateY(0);
+				}
 			}
 		</style>
 	</head>
@@ -209,6 +307,24 @@ const hasTags = (post: any) => Array.isArray(post?.data?.tags) && post.data.tags
 					<a href="/blog">/blog</a>
 					<a href="/about">/about</a>
 					<a href="/rss.xml">/rss</a>
+					<span class="themeSwitch">
+						<button
+							class="themeToggle"
+							type="button"
+							aria-label="Switch theme"
+							title="Switch theme"
+							data-theme-toggle
+						>
+							◐
+						</button>
+						<span
+							class="themeToast"
+							data-theme-toast
+							role="status"
+							aria-live="polite"
+							aria-atomic="true"
+						></span>
+					</span>
 				</nav>
 			</header>
 
@@ -255,5 +371,80 @@ const hasTags = (post: any) => Array.isArray(post?.data?.tags) && post.data.tags
 		</main>
 
 		<Footer />
+		<script is:inline>
+			(() => {
+				const root = document.documentElement;
+				const themeOrder = ['pine', 'ember', 'slate', 'mist', 'honey'];
+				const themeNames = {
+					pine: 'Pine',
+					ember: 'Ember',
+					slate: 'Slate',
+					mist: 'Mist',
+					honey: 'Honey',
+				};
+				const toggle = document.querySelector('[data-theme-toggle]');
+				const toast = document.querySelector('[data-theme-toast]');
+				if (!toggle) return;
+
+				let toastTimer = null;
+				let stored = null;
+				try {
+					stored = localStorage.getItem('theme');
+				} catch (error) {
+					stored = null;
+				}
+				let activeTheme = stored && themeNames[stored] ? stored : 'pine';
+
+				const pulseToggle = () => {
+					toggle.classList.remove('is-pulse');
+					void toggle.offsetWidth;
+					toggle.classList.add('is-pulse');
+				};
+
+				const showToast = (label) => {
+					if (!toast) return;
+					toast.textContent = label;
+					toast.classList.remove('is-visible');
+					void toast.offsetWidth;
+					toast.classList.add('is-visible');
+					if (toastTimer) {
+						window.clearTimeout(toastTimer);
+					}
+					toastTimer = window.setTimeout(() => {
+						toast.classList.remove('is-visible');
+					}, 1200);
+				};
+
+				const applyTheme = (theme, announce) => {
+					const label = themeNames[theme] ?? theme;
+					activeTheme = theme;
+					root.dataset.theme = theme;
+					try {
+						localStorage.setItem('theme', theme);
+					} catch (error) {
+						// Ignore storage errors to keep the UI working.
+					}
+					toggle.setAttribute('aria-label', `Theme: ${label}. Switch theme`);
+					toggle.setAttribute('title', `Theme: ${label}`);
+					if (toast) {
+						toast.textContent = label;
+					}
+					if (announce) {
+						pulseToggle();
+						showToast(label);
+					}
+				};
+
+				applyTheme(activeTheme, false);
+
+				toggle.addEventListener('click', () => {
+					const currentIndex = themeOrder.indexOf(activeTheme);
+					const nextIndex =
+						currentIndex === -1 ? 0 : (currentIndex + 1) % themeOrder.length;
+					const nextTheme = themeOrder[nextIndex];
+					applyTheme(nextTheme, true);
+				});
+			})();
+		</script>
 	</body>
 </html>

@@ -26,6 +26,19 @@ const canonicalURL = Astro.site
 <!-- Basic metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<script is:inline>
+	(() => {
+		try {
+			const stored = localStorage.getItem('theme');
+			const allowed = ['pine', 'ember', 'mist', 'slate', 'honey'];
+			if (stored && allowed.includes(stored)) {
+				document.documentElement.dataset.theme = stored;
+			}
+		} catch (error) {
+			// Ignore storage errors before the page paints.
+		}
+	})();
+</script>
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="sitemap" href="/sitemap-index.xml" />
