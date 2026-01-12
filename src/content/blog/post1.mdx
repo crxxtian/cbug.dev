@@ -1,0 +1,70 @@
+---
+title: 'MacOS Cybersecurity Basics for the Enterprise Track'
+description: 'A practical starting map of the macOS security model, tools, and workflows used in enterprise environments.'
+pubDate: 'Jun 01 2024'
+---
+
+Enterprise macOS security is less about one-off settings and more about how the platform actually works in a managed fleet. This is a baseline for people moving into macOS security at scale: what matters, why it matters, and where teams tend to get tripped up.
+
+## The macOS security model in one page
+
+- **Hardware root of trust:** Apple silicon (and T2 on Intel) establishes a boot chain and protects keys used for FileVault and system integrity.
+- **Signed system volume (SSV):** System files are sealed and verified at boot; persistent tampering becomes noisy.
+- **Code signing + notarization:** Apps are expected to be signed; notarization is a malware screening gate with real gaps and delays.
+- **TCC (privacy prompts):** Access to sensitive resources is per app, per user, and policyable via MDM.
+- **Sandboxing:** Many apps have least-privilege entitlements and containerized file access; security hinges on entitlements and user prompts.
+- **Gatekeeper + XProtect + MRT:** Built-in runtime checks, known-malware detection, and remediation. Good hygiene, not a complete solution.
+
+If you can explain those six items to a non-security stakeholder, you can explain most macOS security decisions.
+
+## Must-know enterprise tooling
+
+- **MDM (Mobile Device Management):** The control plane. Config profiles, compliance checks, and remote actions live here.
+- **Declarative device management:** State-based policy enforcement. It changes how you reason about drift and remediation.
+- **Endpoint Security (ES) + EDR:** ES is the Apple API, EDR is the product. Learn which ES events your EDR does and does not ship.
+- **Security baselines:** CIS + vendor hardening guides are the starting point, not the end state.
+- **Identity and access:** SSO, device-based conditional access, local admin rights, and auth logging matter more than you think.
+
+## Core policies you will be asked about
+
+- **FileVault:** Enforce encryption, escrow recovery keys, and validate real coverage (not just policy intent).
+- **Updates:** Prioritize OS + security update compliance; manage deferrals and user-visible deadlines.
+- **Local admin rights:** Define who gets them, how long, and how exceptions are audited.
+- **TCC controls:** Approve known apps; block risky access; monitor for user-granted drift.
+- **Firewall + network extensions:** Know which controls are system-level vs app-level, and who is allowed to install them.
+
+## How attackers target macOS in enterprises
+
+- **Credential theft:** Browser tokens, keychain prompts, and MFA fatigue patterns.
+- **Abuse of built-in tools:** `osascript`, `launchctl`, `profiles`, `systemextensionsctl`, and signed-but-abused binaries.
+- **Persistence:** Launch agents/daemons, login items, and configuration profiles (especially user-approved).
+- **User-consent blind spots:** Social engineering around system prompts and installer packages.
+
+This is why logging and visibility matter more than perfect prevention.
+
+## Logs and telemetry you should learn first
+
+- **Unified logs:** `log show` and `log stream` for time-scoped investigations.
+- **Endpoint Security events:** Process, file, network, and auth events via EDR.
+- **MDM state:** Inventory, profiles, compliance, and remediation history.
+- **Network:** DNS, proxy, and VPN telemetry for device/user context.
+- **Auth:** Local auth logs, MFA events, and identity provider audit trails.
+
+## Build a simple practice lab
+
+1. Enroll a test Mac in an MDM (even a free tier).
+2. Enforce FileVault, updates, and a basic TCC policy for a known app.
+3. Install an EDR trial and map its event types to the ES framework.
+4. Generate a benign detection (like a simulated persistence item) and validate alert flow.
+5. Break something on purpose (block a needed entitlement) and practice rollback.
+
+## Suggested next steps
+
+- Read the Apple Platform Security Guide and focus on system integrity, TCC, and ES.
+- Walk through the CIS macOS Benchmark and translate controls into MDM profiles.
+- Practice incident response for a real-world scenario: stolen device or suspicious login item.
+- Build a one-page “how we detect this” sheet for one common macOS tradecraft technique.
+
+Mac security is a moving target. The most valuable skill is the ability to connect platform mechanics to enterprise controls and explain tradeoffs clearly.
+
+-cbug

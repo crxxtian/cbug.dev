@@ -6,9 +6,13 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
-const posts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 5);
+const allPosts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const featured = allPosts[0];
+const latest = allPosts.slice(1, 6);
+const hasTags = (post: any) => Array.isArray(post?.data?.tags) && post.data.tags.length > 0;
 ---
 
 <!doctype html>
@@ -16,43 +20,165 @@ const posts = (await getCollection('blog'))
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
+			/* 2010-ish: typography + lines + underlined links */
+			main {
+				max-width: 72ch;
+				margin: 0 auto;
+				padding: 2.25rem 1rem 3.25rem;
+			}
+
+			a {
+				color: inherit;
+				text-decoration: underline;
+				text-decoration-thickness: 1px;
+				text-underline-offset: 0.2em;
+			}
+
+			a:hover {
+				color: var(--accent);
+			}
+
 			.hero {
-				margin-bottom: 2.5rem;
+				padding: 0 0 1.25rem;
+				margin: 0 0 1.5rem;
+				border-bottom: 1px solid var(--border);
+			}
+
+			.kicker {
+				margin: 0 0 0.5rem;
+				color: var(--muted);
+				font-size: 0.9rem;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+
+			.title {
+				margin: 0;
+				font-size: 1.6rem;
+				line-height: 1.2;
+				max-width: 40ch;
 			}
 
 			.tagline {
-				margin-top: 0.4rem;
+				margin: 0.75rem 0 0;
 				color: var(--text-secondary);
-				max-width: 40ch;
+				line-height: 1.6;
+				max-width: 70ch;
+			}
+
+			.navline {
+				margin-top: 0.9rem;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.9rem;
+				color: var(--muted);
+				font-size: 0.95rem;
+			}
+
+			.divider {
+				margin: 1.5rem 0;
+				color: var(--muted);
+				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+					"Courier New", monospace;
+				font-size: 0.9rem;
+				user-select: none;
+			}
+
+			.sectionHead {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1rem;
+				margin: 1.25rem 0 0.6rem;
+			}
+
+			.sectionHead h2 {
+				margin: 0;
+				font-size: 0.95rem;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+
+			.featureRow {
+				padding: 0.9rem 0;
+				border-top: 1px solid var(--border);
+				border-bottom: 1px solid var(--border);
+			}
+
+			.meta {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1rem;
+				color: var(--muted);
+				font-size: 0.9rem;
+				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+					"Courier New", monospace;
+			}
+
+			.hlink {
+				display: inline-block;
+				margin-top: 0.4rem;
+				font-size: 1.15rem;
+				line-height: 1.25;
+				text-decoration-thickness: 2px;
+			}
+
+			.desc {
+				margin: 0.4rem 0 0;
+				color: var(--text-secondary);
+				line-height: 1.55;
+			}
+
+			.tagsLine {
+				margin-top: 0.55rem;
+				color: var(--muted);
+				font-size: 0.9rem;
+				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+					"Courier New", monospace;
+			}
+
+			.tagsLine span {
+				margin-right: 0.6rem;
+				white-space: nowrap;
 			}
 
 			.list {
 				list-style: none;
-				margin: 0;
 				padding: 0;
+				margin: 0;
+				border-top: 1px solid var(--border);
 			}
 
 			.item {
-				display: flex;
-				justify-content: space-between;
-				gap: 1rem;
-				padding: 0.6rem 0;
+				padding: 0.8rem 0;
 				border-bottom: 1px solid var(--border);
 			}
 
-			.item a {
-				color: var(--text-primary);
-				text-decoration: none;
+			.itemTop {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1rem;
 			}
 
-			.item a:hover {
-				color: var(--accent);
-			}
-
-			.date {
+			.itemDate {
 				color: var(--muted);
-				white-space: nowrap;
 				font-size: 0.9rem;
+				white-space: nowrap;
+				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+					"Courier New", monospace;
+			}
+
+			.itemTitle a {
+				text-decoration-thickness: 2px;
+			}
+
+			.itemDesc {
+				margin: 0.35rem 0 0;
+				color: var(--text-secondary);
+				line-height: 1.55;
 			}
 
 			.empty {
@@ -60,24 +186,13 @@ const posts = (await getCollection('blog'))
 				font-style: italic;
 			}
 
-			.more {
-				margin-top: 1rem;
-			}
-
-			.more a {
-				color: var(--accent);
-				text-decoration: none;
-			}
-
-			.more a:hover {
-				color: var(--accent-hover);
-			}
-
-			@media (max-width: 600px) {
-				.item {
+			@media (max-width: 560px) {
+				.itemTop {
 					flex-direction: column;
-					gap: 0.2rem;
+					align-items: flex-start;
+					gap: 0.25rem;
 				}
+
 			}
 		</style>
 	</head>
@@ -86,37 +201,57 @@ const posts = (await getCollection('blog'))
 
 		<main>
 			<header class="hero">
-				<h1>cbug.dev</h1>
-				<p class="tagline">
-					A collection of writeups and learning posts from a security professional.
-				</p>
+				<p class="kicker">cbug.dev</p>
+				<h1 class="title">Writing about security, life, and AI.</h1>
+				<p class="tagline">Writeups and notes for folks who like to go deep.</p>
+
+				<nav class="navline" aria-label="Quick links">
+					<a href="/blog">/blog</a>
+					<a href="/about">/about</a>
+					<a href="/rss.xml">/rss</a>
+				</nav>
 			</header>
 
-			<section>
-				{
-					posts.length === 0 ? (
-						<p class="empty">No posts yet.</p>
-					) : (
-						<>
-							<ul class="list">
-								{posts.map((post) => (
-									<li class="item">
-										<a href={`/blog/${post.id}/`}>
-											{post.data.title}
-										</a>
-										<span class="date">
-											<FormattedDate date={post.data.pubDate} />
-										</span>
-									</li>
-								))}
-							</ul>
-							<p class="more">
+			<p class="divider">────────────────────────────────────────</p>
+
+			{
+				allPosts.length === 0 ? (
+					<p class="empty">No posts yet.</p>
+				) : (
+					<>
+						<section aria-label="Latest entry">
+							<div class="sectionHead">
+								<h2>Latest entry</h2>
 								<a href="/blog">All posts →</a>
-							</p>
-						</>
-					)
-				}
-			</section>
+							</div>
+
+							<div class="featureRow">
+								<div class="meta">
+									<span>latest</span>
+									<span><FormattedDate date={featured.data.pubDate} /></span>
+								</div>
+
+								<a class="hlink" href={`/blog/${featured.slug}/`}>{featured.data.title}</a>
+
+								{featured.data.description ? (
+									<p class="desc">{featured.data.description}</p>
+								) : (
+									<p class="desc">Open the post →</p>
+								)}
+
+								{hasTags(featured) && (
+									<div class="tagsLine" aria-label="Tags">
+										{featured.data.tags.map((t: string) => (
+											<span>[{t}]</span>
+										))}
+									</div>
+								)}
+							</div>
+						</section>
+
+					</>
+				)
+			}
 		</main>
 
 		<Footer />

@@ -18,68 +18,82 @@ import HeaderLink from './HeaderLink.astro';
 </header>
 
 <style>
+	/* Old-school: no "app bar" surface. Just text + a rule. */
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: var(--surface, var(--background));
+		background: transparent;
 		border-bottom: 1px solid var(--border);
 	}
 
 	nav {
-		max-width: var(--content-width, 70ch);
+		max-width: var(--content-width, 72ch);
 		margin: 0 auto;
 		display: flex;
-		align-items: center;
+		align-items: baseline;
 		justify-content: space-between;
 		gap: 1rem;
-		padding: 0.25rem 0;
+		padding: 0.75rem 0;
 	}
 
 	.site-title {
 		margin: 0;
-		font-size: 1em;
-		font-weight: 600;
-		letter-spacing: -0.01em;
+		font-size: 1rem;
+		font-weight: 700;
+		letter-spacing: 0;
 	}
 
 	.site-title a {
-		text-decoration: none;
 		color: var(--text-primary);
-		padding: 0.75em 0;
-		display: inline-block;
+		text-decoration: none;
+	}
+
+	.site-title a:hover {
+		color: var(--accent);
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.2em;
 	}
 
 	.nav-links {
 		list-style: none;
 		display: flex;
-		gap: 0.75em;
+		gap: 0.9rem;
 		margin: 0;
 		padding: 0;
 		flex-wrap: wrap;
 		justify-content: flex-end;
+		font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+			"Courier New", monospace);
+		font-size: 0.95rem;
 	}
 
+	/* Make nav links behave like normal links (underlined). */
 	.nav-links :global(a) {
-		text-decoration: none;
 		color: var(--text-secondary);
-		padding: 0.6em 0.25em;
-		border-bottom: 2px solid transparent;
-		line-height: 1;
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.2em;
+		padding: 0;
+		border: 0;
+		line-height: 1.2;
 	}
 
 	.nav-links :global(a:hover) {
 		color: var(--text-primary);
 	}
 
+	/* Active link = brighter text. No “tab underline.” */
 	.nav-links :global(a.active) {
 		color: var(--text-primary);
-		border-bottom-color: var(--accent);
+		text-decoration-thickness: 2px;
 	}
 
 	@media (max-width: 520px) {
 		nav {
 			flex-direction: column;
 			align-items: flex-start;
+			gap: 0.35rem;
 		}
 		.nav-links {
 			justify-content: flex-start;
