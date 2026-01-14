@@ -1,0 +1,141 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="404" description="Page not found." />
+		<style>
+			.frame {
+				position: relative;
+				margin: 0 auto;
+				padding: 2.5rem 1.5rem;
+				border: 1px solid var(--border);
+				background: var(--surface);
+				overflow: hidden;
+			}
+
+			.frame::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background-image:
+					linear-gradient(transparent 24px, rgba(255, 255, 255, 0.04) 25px),
+					linear-gradient(90deg, transparent 24px, rgba(255, 255, 255, 0.04) 25px);
+				background-size: 25px 25px;
+				opacity: 0.4;
+				pointer-events: none;
+			}
+
+			.frame::after {
+				content: "";
+				position: absolute;
+				left: -10%;
+				right: -10%;
+				top: 0;
+				height: 2px;
+				background: linear-gradient(90deg, transparent, var(--accent), transparent);
+				animation: scan 4s linear infinite;
+				opacity: 0.45;
+			}
+
+			@keyframes scan {
+				0% {
+					transform: translateY(0);
+				}
+				100% {
+					transform: translateY(260px);
+				}
+			}
+
+			.code {
+				margin: 0 0 0.6rem;
+				font-size: clamp(2.8rem, 6vw, 4.5rem);
+				letter-spacing: 0.08em;
+				font-family: var(--mono);
+				color: var(--text-primary);
+			}
+
+			.subtitle {
+				margin: 0 0 1.4rem;
+				color: var(--text-secondary);
+				max-width: 52ch;
+			}
+
+			.actions {
+				display: flex;
+				gap: 0.7rem;
+				flex-wrap: wrap;
+			}
+
+			.action-link {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+				padding: 0.45rem 0.85rem;
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				font-family: var(--mono);
+				font-size: 0.85rem;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				text-decoration: none;
+				color: var(--text-primary);
+				background: rgba(255, 255, 255, 0.04);
+				transition: border-color 140ms ease, color 140ms ease, transform 140ms ease;
+			}
+
+			.action-link:hover {
+				border-color: var(--accent);
+				color: var(--accent);
+				transform: translateY(-1px);
+			}
+
+			.status {
+				margin-top: 1.4rem;
+				font-family: var(--mono);
+				font-size: 0.9rem;
+				color: var(--muted);
+			}
+
+			.status span {
+				color: var(--text-primary);
+			}
+
+			@media (max-width: 520px) {
+				.frame {
+					padding: 2rem 1.1rem;
+				}
+				.actions {
+					width: 100%;
+				}
+				.action-link {
+					flex: 1 1 100%;
+					justify-content: center;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="frame" aria-labelledby="not-found-title">
+				<p class="code" id="not-found-title">404</p>
+				<p class="subtitle">
+					This page drifted off the map. If you followed a link, it might have moved or
+					been renamed.
+				</p>
+				<div class="actions">
+					<a class="action-link" href="/">Home</a>
+					<a class="action-link" href="/blog">Blog</a>
+					<a class="action-link" href="/rss">RSS</a>
+				</div>
+				<p class="status">status: <span>signal lost</span></p>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
