@@ -3,6 +3,12 @@
   https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
 */
 
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
 :root {
 	/* Theme */
 	--background: #0b1210;
