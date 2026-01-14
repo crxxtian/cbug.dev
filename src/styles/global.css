@@ -112,6 +112,7 @@ html,
 body {
 	height: 100%;
 	background-color: var(--background);
+	overflow-x: hidden;
 }
 
 body {
@@ -235,6 +236,7 @@ td {
 	border-bottom: 1px solid var(--border);
 	padding: 0.6em 0.5em;
 	text-align: left;
+	word-break: break-word;
 }
 
 /* Inline code */
@@ -318,6 +320,10 @@ input {
 	}
 	h1 {
 		font-size: 1.7em;
+	}
+	table {
+		display: block;
+		overflow-x: auto;
 	}
 }
 
