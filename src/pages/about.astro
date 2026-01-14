@@ -11,33 +11,132 @@ import Footer from '../components/Footer.astro';
 			title="about"
 			description="About this site"
 		/>
+		<style>
+			.socialShelf {
+				margin-top: 2rem;
+				padding-top: 1rem;
+				border-top: 1px solid var(--border);
+			}
+
+			.socialHead {
+				margin: 0 0 0.75rem;
+				color: var(--muted);
+				font-size: 0.9rem;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+			}
+
+			.socialGrid {
+				display: flex;
+				gap: 0.75rem;
+				flex-wrap: wrap;
+			}
+
+			.socialLink {
+				flex: 1 1 auto;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.55rem;
+				padding: 0.55rem 0.95rem 0.55rem 0.75rem;
+				border: 1px solid var(--border);
+				border-radius: 999px;
+				background: linear-gradient(120deg, rgba(255, 255, 255, 0.06), transparent 45%);
+				text-decoration: none;
+				color: inherit;
+				transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease,
+					color 140ms ease;
+			}
+
+			.socialLink:hover {
+				border-color: var(--accent);
+				transform: translateY(-2px);
+				box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+			}
+
+			.socialIcon {
+				display: inline-flex;
+				width: 1.05rem;
+				height: 1.05rem;
+				color: var(--accent);
+			}
+
+			.socialName {
+				font-family: var(--mono);
+				font-size: 0.85rem;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				color: var(--text-primary);
+			}
+
+			@media (max-width: 560px) {
+				.socialGrid {
+					gap: 0.7rem;
+				}
+				.socialLink {
+					flex: 1 1 100%;
+					justify-content: center;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
 			<h1>about</h1>
 
-<p>
-				Started in 2026, this site was created as a personal collection of notes and writeups related to security work, 
-				including incident response, detection engineering, and malware analysis. 
+			<p>
+				Started in 2026, this site was created as a personal collection of notes and writeups related to security work,
+				including incident response, detection engineering, and malware analysis.
 			</p>
-<p>
-				By day, I work as a Security Analyst in the financial services industry. 
-				By night, I get bored and decide to make short and silly blog posts. 
-
-				<p>
-				I have an interest in macOS malware and fighting off threat actors. 
+			<p>
+				By day, I work as a Security Analyst in the financial services industry.
+				By night, I get bored and decide to make short and silly blog posts.
 			</p>
-
+			<p>
+				I have an interest in macOS malware and fighting off threat actors.
 			</p>
 			<p>
 				Content on my site reflects my personal learning and experimentation. It is not affiliated
 				with or representative of any employer. Some posts are incomplete or exploratory by design.
 			</p>
-<p>
-				<p>
-				
-			</p>
+
+			<section class="socialShelf" aria-label="Elsewhere">
+				<p class="socialHead">Elsewhere</p>
+				<div class="socialGrid">
+					<a
+						class="socialLink"
+						href="https://www.linkedin.com/in/cbugaian/"
+						rel="me noopener noreferrer"
+						target="_blank"
+					>
+						<span class="socialIcon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" role="img" focusable="false">
+								<path
+									fill="currentColor"
+									d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0.5 8h4V24h-4zM8 8h3.8v2.2h0.1c0.5-1 1.9-2.2 4-2.2 4.3 0 5.1 2.8 5.1 6.5V24h-4v-7.1c0-1.7 0-3.9-2.4-3.9-2.4 0-2.8 1.9-2.8 3.8V24H8z"
+								/>
+							</svg>
+						</span>
+						<span class="socialName">LinkedIn</span>
+					</a>
+					<a
+						class="socialLink"
+						href="https://github.com/crxxtian"
+						rel="me noopener noreferrer"
+						target="_blank"
+					>
+						<span class="socialIcon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" role="img" focusable="false">
+								<path
+									fill="currentColor"
+									d="M12 0.5C5.73 0.5 0.5 5.74 0.5 12.04c0 5.12 3.29 9.46 7.86 11-0.01-0.56-0.02-1.51 0.01-2.17-3.2 0.7-3.87-1.37-3.87-1.37-0.53-1.35-1.29-1.71-1.29-1.71-1.05-0.73 0.08-0.72 0.08-0.72 1.16 0.08 1.77 1.2 1.77 1.2 1.03 1.76 2.7 1.25 3.36 0.96 0.1-0.75 0.4-1.25 0.72-1.54-2.55-0.29-5.23-1.29-5.23-5.73 0-1.27 0.45-2.31 1.2-3.12-0.12-0.29-0.52-1.46 0.12-3.05 0 0 0.98-0.31 3.2 1.19a11.05 11.05 0 0 1 5.83 0c2.22-1.5 3.2-1.19 3.2-1.19 0.64 1.59 0.24 2.76 0.12 3.05 0.75 0.81 1.2 1.85 1.2 3.12 0 4.45-2.69 5.44-5.25 5.73 0.41 0.36 0.77 1.08 0.77 2.18 0 1.58-0.02 2.86-0.02 3.25 4.57-1.54 7.86-5.88 7.86-11C23.5 5.74 18.27 0.5 12 0.5z"
+								/>
+							</svg>
+						</span>
+						<span class="socialName">GitHub</span>
+					</a>
+				</div>
+			</section>
 
 
 		</main>
