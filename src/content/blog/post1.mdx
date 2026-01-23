@@ -1,184 +1,34 @@
 ---
-title: "macOS Cybersecurity Basics for Security Analysts"
-description: "A test post."
+title: "Hello World"
+description: "Come read my very first blog post!"
 pubDate: "Jun 01 2026"
 ---
 
-Enterprise macOS security isn’t about finding a magic set of settings. It’s about understanding how the platform *actually* behaves in a managed fleet—so you can make good calls, explain tradeoffs, and investigate incidents without guessing.
+<img
+  src="https://i1.sndcdn.com/artworks-000225283964-dp4478-t1080x1080.jpg"
+  alt="Cover art"
+  width="360"
+  style="max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 0 auto 1rem;"
+/>
 
-If you’re coming from “mostly Windows + a little Mac,” this is the shortest path to being useful.
+Welcome to my very first blog post!
 
----
+I'm making it my goal this new year to start creating more content rather than constantly being a consumer of content. I've long wanted to start a blog, but I held myself back for a few common reasons.
 
-## The macOS security model (the stuff that drives everything else)
+I think if I really dig into it, it was worrying that I would be judged or criticized by others, which I'm sure is a common one for first time writers. I also quite honestly had no idea what to write about. It seemed extremely daunting to just sit and figure out how to write casually. I've never written for my own enjoyment or pleasure and found that it may be a bit challenging at times for me due to the fact that my educational background never focused on such.
 
-Here’s the mental map I use. You don’t need to memorize every detail—just know what each layer is trying to do.
+Nonetheless, now that I'm out of university, I want to make sure that I don't lose out on any important skills such as analytical research and long-form writing and perhaps gain some skills in creative writing. I want to make sure I do not lean on LLMs and produce real human content that others may find interesting to continue to stimulate my brain. Although LLMs do have their place for certain tasks, everything will be typed out by a human (me) on this blog.
 
-| Layer | What it’s trying to guarantee | What you should care about in enterprise |
-|---|---|---|
-| Hardware/boot trust | The OS starts from a known-good chain | Don’t weaken startup security; keep devices supported and updated |
-| Signed System Volume (SSV) | System files are sealed and verified | Tampering gets harder to hide; “weird system mods” become a bigger signal |
-| Gatekeeper + notarization | Reduce random code execution | Good friction, not a verdict. Signed/notarized doesn’t mean “safe.” |
-| TCC (privacy prompts) | Apps need consent for sensitive access | If you don’t manage it, users will… and drift happens quietly |
-| Sandboxing + entitlements | Apps run with limited privileges by design | “Least privilege” is real, but permissions + prompts still matter |
-| Built-in malware defenses | Block/remediate known bad | Hygiene layer. Useful, but don’t treat it as your EDR |
+I guess I'm working in the field now too so I can try and build my skills while also sharing my ideas. I'm starting to not worry as much about those things mentioned previously and so I've decided to start my own site where I can write about stuff I'm passionate about and develop my skills as a technical and creative author.
 
-If you can explain those six things to a non-security stakeholder, you can explain most macOS security decisions.
+This site will hopefully become a consistently updated blog with real analysis, real notes, and real research. I'll be posting about recent news that I find interesting, my growing interest in macOS malware, and my journey in incident response/security operations write-ups and tales.
 
----
+Unfortunately, I will not be posting any content regarding work that goes on at my day job. This site will contain after-hours security research and projects.
 
-## What “enterprise macOS security” actually looks like day-to-day
+I may get around to doing one post a month until I get more comfortable with blogging, or depending on how busy I am I may get more done in a month.
 
-You’ll spend most of your time in these buckets:
+If you want to find out more about my professional experience, check out the [/about](/about) page.
 
-1) Managing device state (MDM/DDM)  
-2) Approving or denying sensitive permissions (TCC/PPPC)  
-3) Keeping update compliance real (not just “profile deployed”)  
-4) Making sure you can *see* what happened when something goes wrong (EDR/ES + logs)
+If you want to know what I'm up to these days, check out the [/now](/now) page.
 
-The trap is thinking “we pushed a policy” means “we’re done.” In a fleet, policy is intent. You still need evidence.
-
----
-
-## Tooling you should know (and why it exists)
-
-### MDM: your control plane
-MDM is where configuration profiles, compliance checks, and remote actions live. If you can’t answer “what profiles are installed, on which Macs, and when did it change,” you’re flying blind.
-
-### Declarative Device Management (DDM): state-based enforcement
-DDM shifts the model from “push this setting” to “the device should be in this state.” It’s especially relevant for updates and compliance because it helps you reason about drift and remediation more cleanly.
-
-### Endpoint Security (ES) vs EDR: don’t mix them up
-- **Endpoint Security (ES)** is Apple’s framework that security products can subscribe to for event notifications (process, file, etc.).
-- **EDR** is the product that consumes ES events (plus other data) and turns it into detections, alerts, and response actions.
-
-Practical advice: learn the ES “menu” of event types so you can ask your EDR vendor what they collect, what they *don’t*, and what’s configurable.
-
----
-
-## Policies you will get asked about (with the beginner-friendly “so what?”)
-
-### FileVault
-FileVault is table stakes in enterprise. The difference between “we enabled it” and “we’re safe” is whether you can prove:
-- encryption is actually on
-- recovery keys are escrowed and retrievable
-- coverage is high (not just “most devices”)
-
-What to watch for: devices that report as compliant but never escrowed keys correctly, and edge cases around off-network Macs.
-
-### Updates
-Updates are one of the highest-ROI controls you have. The hard part isn’t “can we tell macOS to update.” The hard part is:
-- managing deferrals responsibly
-- making deadlines real without breaking business workflows
-- measuring compliance over time (“time-to-patch,” not “profile installed”)
-
-### Local admin rights
-Local admin doesn’t automatically mean compromise, but it makes almost everything easier for an attacker and harder for you.
-A workable enterprise posture usually looks like:
-- standard user by default
-- admin by exception
-- exceptions expire or are reviewed
-- the exception process is auditable
-
-### TCC / PPPC (privacy permissions)
-TCC is where a lot of Mac incidents turn into “we can’t tell what happened” incidents.
-
-macOS prompts users when apps request sensitive access (camera, mic, screen recording, accessibility, Full Disk Access, etc.). In enterprise, you want to pre-approve known-good apps and deny risky categories—so your environment isn’t a pile of inconsistent user decisions.
-
-Two common failure modes:
-- You try to roll out PPPC late, after users already granted permissions all over the place.
-- You approve too broadly “just to make the prompts stop,” and you accidentally create a quiet data-access highway.
-
-### Firewall, network extensions, and system extensions
-On modern macOS, a lot of “security tooling” runs via extensions that require approvals and have real UX impact if misconfigured. Know:
-- what your org allows
-- who can install/approve
-- how you roll back when something breaks
-
----
-
-## How attackers commonly target macOS in enterprises (the realistic version)
-
-The “Hollywood malware” mental model doesn’t help much. A lot of real-world macOS tradecraft is boring on purpose.
-
-- **Credential access and token theft**: browsers, sessions, keychain prompts, and “please re-auth” phishing flows.
-- **Living off the land**: using built-in binaries and scripting (`osascript`, `launchctl`, installer packages) to look normal.
-- **Persistence**: Launch Agents/Daemons, login items, and sometimes configuration profiles.
-- **User-consent abuse**: social engineering around prompts (“click Allow so the app works”).
-
-This is why visibility matters more than trying to achieve perfect prevention.
-
----
-
-## Logs and telemetry to learn first (so you can actually investigate)
-
-### Unified logs (local, noisy, but powerful)
-You don’t need to be a wizard. Just get comfortable time-scoping:
-
-```bash
-# Last hour (start here during an investigation)
-log show --last 1h
-
-# Live stream (good for reproducing behavior)
-log stream
-```
-
-## EDR telemetry (ES-backed, but varies by vendor)
-
-Treat “we have EDR” as a hypothesis until you confirm:
-
-- what **process** events you get
-- what **file** events you get
-- whether **network visibility** is first-class or an add-on
-- what’s shipped **by default** vs what you must **enable**
-
-## MDM state and history
-
-For enterprise IR, MDM is often the missing context:
-
-- what **profiles** were installed
-- when **settings changed**
-- whether a device is **drifting** from policy
-- what **remediation actions** were taken
-
-## Network and identity logs
-
-In real incidents, DNS/proxy/VPN + IdP audit logs are what connect:
-
-- “a Mac did a thing”
-- to “a user session did a thing”
-
-## Build a simple practice lab (1–2 hours)
-
-1. Enroll a test Mac in an MDM.
-2. Enforce FileVault and verify key escrow works end-to-end.
-3. Enforce software updates (or at least measure compliance and deferrals).
-4. Apply one PPPC policy for a known app category and confirm behavior.
-5. Install an EDR trial and map its telemetry to ES event categories.
-6. Create a benign “incident” (like a Launch Agent persistence item) and practice: detect → investigate → remove → verify.
-
-<details>
-  <summary><strong>Bonus: break + rollback</strong></summary>
-
-Intentionally break something (overly strict PPPC or extension approvals), then practice rollback.  
-This is what you’ll do in production eventually—better to learn it in a lab.
-
-</details>
-
-## Sources (start here)
-
-- Apple Platform Security (web): https://support.apple.com/guide/security/welcome/web
-- Apple Platform Security (PDF): https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf
-- Signed System Volume security: https://support.apple.com/guide/security/signed-system-volume-security-secd698747c9/web
-- Gatekeeper and runtime protection: https://support.apple.com/guide/security/gatekeeper-and-runtime-protection-sec5599b66df/web
-- Protecting against malware in macOS: https://support.apple.com/guide/security/protecting-against-malware-sec469d47bd8/web
-- PPPC (Privacy Preferences Policy Control) payload (Deployment): https://support.apple.com/guide/deployment/privacy-preferences-policy-control-payload-dep38df53c2a/web
-- Software updates via device management (Deployment): https://support.apple.com/guide/deployment/install-and-enforce-software-updates-depd30715cbb/web
-- Declarative Device Management overview (Deployment): https://support.apple.com/guide/deployment/declarative-device-management-manage-apple-depc30268577/web
-- Endpoint Security (Developer docs): https://developer.apple.com/documentation/endpointsecurity
-
----
-
-If you’re learning macOS security for enterprise work, the most valuable skill is connecting platform mechanics to controls, then validating those controls with evidence.
-
--cbug
+-- cbug
