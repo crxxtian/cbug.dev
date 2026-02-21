@@ -1,0 +1,171 @@
+<section class="sleepyCat" aria-hidden="true">
+	<p class="prompt">[~/home]$ nap --now<span class="cursor">_</span></p>
+	<div class="scene">
+		<div class="cat">
+			<div class="catLine"> /\_/\ </div>
+			<div class="face">
+				<span class="eyes eyesIdle">( -.- )</span>
+				<span class="eyes eyesBlink">( -_o )</span>
+			</div>
+			<div class="catLine"> &gt; ^ &lt; </div>
+		</div>
+		<span class="z z1">z</span>
+		<span class="z z2">z</span>
+		<span class="z z3">z</span>
+	</div>
+</section>
+
+<style>
+	.sleepyCat {
+		margin: 0 0 0.55rem;
+		display: grid;
+		justify-items: center;
+		gap: 0.35rem;
+		color: var(--text-secondary);
+	}
+
+	.prompt {
+		margin: 0;
+		font-family: var(--mono);
+		font-size: 0.64rem;
+		letter-spacing: 0.05em;
+		text-transform: lowercase;
+		color: var(--muted);
+		opacity: 0.92;
+	}
+
+	.cursor {
+		display: inline-block;
+		margin-left: 0.04rem;
+		color: color-mix(in srgb, var(--accent) 65%, var(--text-secondary));
+		animation: cursorBlink 1s steps(1, end) infinite;
+	}
+
+	.scene {
+		position: relative;
+		display: inline-block;
+		padding: 0.1rem 0.25rem 0.15rem;
+	}
+
+	.cat {
+		display: grid;
+		justify-items: center;
+		gap: 0;
+		font-family: var(--mono);
+		font-size: clamp(0.66rem, 1.6vw, 0.76rem);
+		line-height: 1.15;
+		color: var(--text-secondary);
+		animation: catBreath 2.3s ease-in-out infinite;
+	}
+
+	.catLine {
+		margin: 0;
+		white-space: pre;
+	}
+
+	.face {
+		position: relative;
+		line-height: 1.15;
+		height: 1.15em;
+	}
+
+	.eyes {
+		display: block;
+		white-space: pre;
+	}
+
+	.eyesBlink {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		animation: blinkSwap 2.8s step-end infinite;
+	}
+
+	.z {
+		position: absolute;
+		right: -0.08rem;
+		top: -0.2rem;
+		font-family: var(--mono);
+		color: color-mix(in srgb, var(--accent) 45%, var(--text-secondary));
+		opacity: 0;
+		animation: zDrift 2.9s ease-in-out infinite;
+	}
+
+	.z2 {
+		right: 0.22rem;
+		font-size: 0.92em;
+		animation-delay: 0.95s;
+	}
+
+	.z3 {
+		right: 0.5rem;
+		font-size: 0.84em;
+		animation-delay: 1.9s;
+	}
+
+	@keyframes catBreath {
+		0%,
+		100% {
+			transform: translateY(0) rotate(0deg);
+		}
+		50% {
+			transform: translateY(2px) rotate(0.35deg);
+		}
+	}
+
+	@keyframes blinkSwap {
+		0%,
+		78%,
+		100% {
+			opacity: 0;
+		}
+		80%,
+		86% {
+			opacity: 1;
+		}
+	}
+
+	@keyframes zDrift {
+		0%,
+		14% {
+			opacity: 0;
+			transform: translateY(0) translateX(0) scale(0.95);
+		}
+		28%,
+		62% {
+			opacity: 0.82;
+		}
+		100% {
+			opacity: 0;
+			transform: translateY(-1.1rem) translateX(0.35rem) scale(1.06);
+		}
+	}
+
+	@keyframes cursorBlink {
+		0%,
+		48% {
+			opacity: 1;
+		}
+		49%,
+		100% {
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cat,
+		.eyesBlink,
+		.z {
+			animation: none;
+		}
+
+		.z {
+			opacity: 0;
+		}
+
+		.z1 {
+			opacity: 0.46;
+			transform: translateY(-0.25rem);
+		}
+	}
+</style>

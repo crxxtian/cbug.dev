@@ -4,6 +4,7 @@ import BaseHead from '../components/BaseHead.astro';
 import BlogList from '../components/BlogList.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import SleepyCat from '../components/SleepyCat.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const PAGE_SIZE = 10;
@@ -34,6 +35,8 @@ const pageOnePosts = posts.slice(0, PAGE_SIZE);
 				}}
 			/>
 		</main>
-		<Footer />
+		<Footer>
+			<SleepyCat slot="before" />
+		</Footer>
 	</body>
 </html>

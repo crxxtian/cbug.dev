@@ -1,8 +1,16 @@
 ---
 const today = new Date();
+const hasBefore = Astro.slots.has('before');
 ---
 
 <footer>
+	{
+		hasBefore && (
+			<div class="before">
+				<slot name="before" />
+			</div>
+		)
+	}
 	<p>&copy; {today.getFullYear()} cbug.dev</p>
 	<p class="disclaimer">
 	</p>
@@ -15,6 +23,10 @@ const today = new Date();
 		color: var(--text-secondary);
 		text-align: center;
 		font-size: 0.9em;
+	}
+
+	.before {
+		margin-bottom: 0.55rem;
 	}
 
 	footer p {
