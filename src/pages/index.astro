@@ -1,252 +1,39 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
+import BlogList from '../components/BlogList.astro';
 import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
-const allPosts = (await getCollection('blog')).sort(
+const PAGE_SIZE = 10;
+
+const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
-const featured = allPosts[0];
-const hasTags = (post: any) => Array.isArray(post?.data?.tags) && post.data.tags.length > 0;
+const lastPage = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+const pageOnePosts = posts.slice(0, PAGE_SIZE);
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			/* 2010-ish: typography + lines + underlined links */
-			main {
-				width: var(--content-width);
-				max-width: calc(100% - 2em);
-				margin: 0 auto;
-				padding: 2.25rem 1rem 3.25rem;
-			}
-
-			a {
-				color: inherit;
-				text-decoration: underline;
-				text-decoration-thickness: 1px;
-				text-underline-offset: 0.2em;
-			}
-
-			a:hover {
-				color: var(--accent);
-			}
-
-			.hero {
-				padding: 0 0 1.25rem;
-				margin: 0 0 1.5rem;
-				border-bottom: 1px solid var(--border);
-			}
-
-			.kicker {
-				margin: 0 0 0.5rem;
-				color: var(--muted);
-				font-size: 0.9rem;
-				letter-spacing: 0.04em;
-				text-transform: uppercase;
-			}
-
-			.title {
-				margin: 0;
-				font-size: 1.6rem;
-				line-height: 1.2;
-				max-width: 40ch;
-			}
-
-			.tagline {
-				margin: 0.75rem 0 0;
-				color: var(--text-secondary);
-				line-height: 1.6;
-				max-width: 70ch;
-			}
-
-			.divider {
-				margin: 1.5rem 0;
-				color: var(--muted);
-				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-					"Courier New", monospace;
-				font-size: 0.9rem;
-				user-select: none;
-			}
-
-			.sectionHead {
-				display: flex;
-				align-items: baseline;
-				justify-content: space-between;
-				gap: 1rem;
-				margin: 1.25rem 0 0.6rem;
-			}
-
-			.sectionHead h2 {
-				margin: 0;
-				font-size: 0.95rem;
-				letter-spacing: 0.04em;
-				text-transform: uppercase;
-				color: var(--muted);
-			}
-
-			.featureRow {
-				padding: 0.9rem 0;
-				border-top: 1px solid var(--border);
-				border-bottom: 1px solid var(--border);
-			}
-
-			.meta {
-				display: flex;
-				align-items: baseline;
-				justify-content: space-between;
-				gap: 1rem;
-				color: var(--muted);
-				font-size: 0.9rem;
-				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-					"Courier New", monospace;
-			}
-
-			.hlink {
-				display: inline-block;
-				margin-top: 0.4rem;
-				font-size: 1.15rem;
-				line-height: 1.25;
-				text-decoration-thickness: 2px;
-			}
-
-			.desc {
-				margin: 0.4rem 0 0;
-				color: var(--text-secondary);
-				line-height: 1.55;
-			}
-
-			.tagsLine {
-				margin-top: 0.55rem;
-				color: var(--muted);
-				font-size: 0.9rem;
-				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-					"Courier New", monospace;
-			}
-
-			.tagsLine span {
-				margin-right: 0.6rem;
-				white-space: nowrap;
-			}
-
-			.list {
-				list-style: none;
-				padding: 0;
-				margin: 0;
-				border-top: 1px solid var(--border);
-			}
-
-			.item {
-				padding: 0.8rem 0;
-				border-bottom: 1px solid var(--border);
-			}
-
-			.itemTop {
-				display: flex;
-				align-items: baseline;
-				justify-content: space-between;
-				gap: 1rem;
-			}
-
-			.itemDate {
-				color: var(--muted);
-				font-size: 0.9rem;
-				white-space: nowrap;
-				font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-					"Courier New", monospace;
-			}
-
-			.itemTitle a {
-				text-decoration-thickness: 2px;
-			}
-
-			.itemDesc {
-				margin: 0.35rem 0 0;
-				color: var(--text-secondary);
-				line-height: 1.55;
-			}
-
-			.empty {
-				color: var(--text-secondary);
-				font-style: italic;
-			}
-
-			@media (max-width: 560px) {
-				.hero {
-					margin-bottom: 1.1rem;
-				}
-				.title {
-					font-size: 1.4rem;
-				}
-				.tagline {
-					max-width: 100%;
-				}
-				.itemTop {
-					flex-direction: column;
-					align-items: flex-start;
-					gap: 0.25rem;
-				}
-			}
-		</style>
 	</head>
 	<body>
 		<Header />
-
 		<main>
-			<header class="hero">
-				
-				<h1 class="title">Welcome to my tech blog.</h1>
-				<p class="tagline">I like to write & learn about cybersecurity and life.</p>
-			</header>
-
-			<p class="divider">────────────────────────────────────────</p>
-
-			{
-				allPosts.length === 0 ? (
-					<p class="empty">No posts yet.</p>
-				) : (
-					<>
-						<section aria-label="Latest entry">
-							<div class="sectionHead">
-								<h2>Latest entry</h2>
-								<a href="/blog">All posts →</a>
-							</div>
-
-							<div class="featureRow">
-								<div class="meta">
-									<span>latest</span>
-									<span><FormattedDate date={featured.data.pubDate} /></span>
-								</div>
-
-								<a class="hlink" href={`/blog/${featured.slug}/`}>{featured.data.title}</a>
-
-								{featured.data.description ? (
-									<p class="desc">{featured.data.description}</p>
-								) : (
-									<p class="desc">Open the post →</p>
-								)}
-
-								{hasTags(featured) && (
-									<div class="tagsLine" aria-label="Tags">
-										{featured.data.tags.map((t: string) => (
-											<span>[{t}]</span>
-										))}
-									</div>
-								)}
-							</div>
-						</section>
-
-					</>
-				)
-			}
+			<BlogList
+				posts={pageOnePosts}
+				pagination={{
+					currentPage: 1,
+					lastPage,
+					prevUrl: null,
+					nextUrl: lastPage > 1 ? '/blog/2' : null,
+				}}
+			/>
 		</main>
-
 		<Footer />
 	</body>
 </html>
