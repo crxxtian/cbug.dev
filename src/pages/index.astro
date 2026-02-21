@@ -1,42 +1,20 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import BlogList from '../components/BlogList.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import SleepyCat from '../components/SleepyCat.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-
-const PAGE_SIZE = 10;
-
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-
-const lastPage = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
-const pageOnePosts = posts.slice(0, PAGE_SIZE);
+const target = '/blog';
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<meta charset="utf-8" />
+		<meta http-equiv="refresh" content={`0;url=${target}`} />
+		<link rel="canonical" href={new URL(target, Astro.site)} />
+		<meta name="robots" content="noindex" />
+		<title>Redirecting…</title>
 	</head>
 	<body>
-		<Header />
-		<main>
-			<BlogList
-				posts={pageOnePosts}
-				pagination={{
-					currentPage: 1,
-					lastPage,
-					prevUrl: null,
-					nextUrl: lastPage > 1 ? '/blog/2' : null,
-				}}
-			/>
-		</main>
-		<Footer>
-			<SleepyCat slot="before" />
-		</Footer>
+		<script is:inline>
+			window.location.replace('/blog');
+		</script>
+		<a href={target}>Redirecting to /blog</a>
 	</body>
 </html>
