@@ -1,16 +1,21 @@
+---
+const CAT_ART = String.raw`⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢀⣴⠖⠚⠛⠒⠶⠦⣤⡾⠋⠙⣦⣤⣤⣤⡴⠚⢳⡀⠀
+⠀⠀⠀⢠⠟⠀⠀⠀⠀⠀⠀⠀⠘⠃⠀⠀⠀⠀⠀⠀⠀⠀⠘⣇⠀
+⠀⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡆
+⣸⠋⠟⡀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⢧⣤⠆⢀⡀⢠⣤⡤⢸⡇
+⠹⣄⠀⠙⠛⠛⠉⠉⠹⣧⠀⠚⠓⢦⡀⠀⠀⠈⠉⠀⠀⢠⣿⡄
+⠀⠀⠙⢳⢦⣤⣤⣤⢴⡿⡳⠶⢤⣤⡼⣷⠦⢤⣤⣤⡤⡴⣿⠞⠃
+⠀⠀⠀⠁⠊⠁⠈⠈⠁⠀⠀⠈⠁⠉⠀⠁⠀⠉⠐⠁⠉⠀⠀⠀`;
+---
+
 <section class="sleepyCat" aria-hidden="true">
 	<p class="prompt">[~/home]$ nap --now<span class="cursor">_</span></p>
 	<div class="scene">
-		<div class="cat">
-			<div class="catLine"> /\_/\ </div>
-			<div class="face">
-				<span class="eyes">( - - )</span>
-			</div>
-			<div class="catLine"> &gt; ^ &lt; </div>
-		</div>
+		<pre class="cat">{CAT_ART}</pre>
 		<span class="z z1">z</span>
-		<span class="z z2">z</span>
-		<span class="z z3">z</span>
+		<span class="z z2">Z</span>
+		<span class="z z3">Zz</span>
 	</div>
 </section>
 
@@ -43,40 +48,35 @@
 	.scene {
 		position: relative;
 		display: inline-block;
-		padding: 0.1rem 0.25rem 0.15rem;
+		padding: 0.05rem 0;
+		max-width: 100%;
 	}
 
 	.cat {
-		display: grid;
-		justify-items: center;
-		gap: 0;
+		margin: 0;
 		font-family: var(--mono);
-		font-size: clamp(0.66rem, 1.6vw, 0.76rem);
-		line-height: 1.15;
+		font-size: clamp(0.37rem, 0.95vw, 0.5rem);
+		line-height: 1.02;
 		color: var(--text-secondary);
+		white-space: pre;
+		background: transparent;
+		border: 0;
+		padding: 0;
+		border-radius: 0;
+		box-shadow: none;
+		overflow-x: auto;
+		scrollbar-width: none;
 		animation: catBreath 2.3s ease-in-out infinite;
 	}
 
-	.catLine {
-		margin: 0;
-		white-space: pre;
-	}
-
-	.face {
-		position: relative;
-		line-height: 1.15;
-		height: 1.15em;
-	}
-
-	.eyes {
-		display: block;
-		white-space: pre;
+	.cat::-webkit-scrollbar {
+		display: none;
 	}
 
 	.z {
 		position: absolute;
-		right: -0.08rem;
-		top: -0.2rem;
+		left: 56%;
+		top: 0.14rem;
 		font-family: var(--mono);
 		color: color-mix(in srgb, var(--accent) 45%, var(--text-secondary));
 		opacity: 0;
@@ -84,13 +84,13 @@
 	}
 
 	.z2 {
-		right: 0.22rem;
+		left: 59%;
 		font-size: 0.92em;
 		animation-delay: 0.95s;
 	}
 
 	.z3 {
-		right: 0.5rem;
+		left: 62%;
 		font-size: 0.84em;
 		animation-delay: 1.9s;
 	}
@@ -145,6 +145,25 @@
 		.z1 {
 			opacity: 0.46;
 			transform: translateY(-0.25rem);
+		}
+	}
+
+	@media (max-width: 740px) {
+		.cat {
+			font-size: clamp(0.33rem, 1.55vw, 0.42rem);
+		}
+
+		.z {
+			left: 54%;
+			top: 0.08rem;
+		}
+
+		.z2 {
+			left: 57%;
+		}
+
+		.z3 {
+			left: 60%;
 		}
 	}
 </style>
